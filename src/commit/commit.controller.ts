@@ -13,8 +13,12 @@ export class CommitController {
     @Get('commits')
     public async getCommitHistory(@Res() res: Response) {
         try {
-            const commits = await this.githubService.getCommits();
-            return res.status(HttpStatus.OK).json(commits.data);
+            const commitsFrontEnd = await this.githubService.getCommits('ramyx', 'reactjs-githistory-app');
+            const commitsBackEnd = await this.githubService.getCommits('ramyx', 'nestjs-githistory-app');
+            return res.status(HttpStatus.OK).json({
+                frontend: commitsFrontEnd.data,
+                backend: commitsBackEnd.data
+            });
         } catch (error) {
             return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({ message: 'An error ocurred.'})
         }
